@@ -1,0 +1,17 @@
+{
+    "name": "halysonreis/sistema_os",
+    "description": "Sistema de Ordens de Serviços",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "app\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Halysonreis"
+        }
+    ],
+    "require": {}
+}
