@@ -6,7 +6,11 @@
     "autoload": {
         "psr-4": {
             "app\\": "src/"
-        }
+        },
+        "classmap": [
+            "app/Models",
+            "app/Controller"
+        ]
     },
     "authors": [
         {

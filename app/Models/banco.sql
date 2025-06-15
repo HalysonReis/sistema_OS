@@ -24,9 +24,9 @@ CREATE TABLE cliente (
 CREATE TABLE ordem_servico (
 	id_os int not null auto_increment,
     descricao varchar(255),
-    status int default 1,
+    status varchar(15),
     data_abertura datetime default current_timestamp,
-    data_previta datetime,
+    data_prevista datetime,
     data_entrega datetime,
     valor_total decimal(10,2),
     observacoes text,
