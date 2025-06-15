@@ -3,7 +3,7 @@
         'name' => 'halysonreis/sistema_os',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd1b40985cd79d95b7a233cd6145911286b08ade8',
+        'reference' => '668784b1c8bbc16672f34d66c5a4360345778569',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'halysonreis/sistema_os' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd1b40985cd79d95b7a233cd6145911286b08ade8',
+            'reference' => '668784b1c8bbc16672f34d66c5a4360345778569',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

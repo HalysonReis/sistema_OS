@@ -16,13 +16,13 @@ class Database {
     public string $table;
     private $conn;
 
-    function __construction($table = null){
+    function __construct($table = null){
         $this->table = $table;
-        $this->conection();
         $this->set_conn();
+        $this->conection();
     }
 
-    private function set_conn(){
+    function set_conn(){
         $this->DB_LOCAL = $_ENV['DB_HOST'];
         $this->DB_NAME = $_ENV['DB_NAME'];
         $this->DB_USER = $_ENV['DB_USER'];
@@ -73,8 +73,8 @@ class Database {
 
     public function select($where = null, $limit = null, $order = null){
         $where = strlen($where) ? " WHERE ". $where : '';
-        $order = srtlen($order) ? " ORDER BY ". $order : '';
-        $limit = strlen($order) ? " LIMIT ". $limit : '';
+        $order = $order != null ? " ORDER BY ". $order : '';
+        $limit = $limit != null ? " LIMIT ". $limit : '';
 
         $query = "SELECT * from ". $this->table. ' '. $where. ' '. $order. ' '. $limit;
         
@@ -82,7 +82,7 @@ class Database {
     }
 
     public function update($where, $values){
-        $fields = array_keys($value);
+        $fields = array_keys($values);
         $param = array_values($values);
 
         $query = "UPDATE ". $this->table. " SET ". implode("=?,", $fields). "=? WHERE ". $where;

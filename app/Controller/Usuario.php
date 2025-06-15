@@ -2,16 +2,17 @@
 
 namespace app\Controller;
 require '../vendor/autoload.php';
+use PDO;
 use app\Models\Database;
 
 class Usuario{
-    public int $id_usuario;
-    public string $nome;
-    public string $email;
-    public string $senha;
-    public int $tipo = 0;
-    public int $status;
-    public string $data_cadastro;
+    public $id_usuario;
+    public $nome;
+    public $email;
+    public $senha;
+    public $tipo;
+    public $status;
+    public $data_cadastro;
 
     public function cadastro_usuario(){
         $db = new Database('usuario');
@@ -31,10 +32,10 @@ class Usuario{
         $db = new Database('usuario');
 
         if($id == null){
-            $select = $db->select()->fetchAll(PDO::FECTH_ASSOC);
+            $select = $db->select()->fetchAll(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }else {
-            $select = $db->select('id_usuario = '. $id)->fetchObject(PDO::FECTH_ASSOC);
+            $select = $db->select('id_usuario = '. $id)->fetch(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }
     }
@@ -45,7 +46,6 @@ class Usuario{
         $value = [
             'nome' => $this->nome,
             'email' => $this->email,
-            'senha' => $this->senha,
             'tipo' => $this->tipo,
         ];
 
@@ -59,5 +59,21 @@ class Usuario{
         $delete = $db->delete('id_usuario = '. $id);
 
         return $delete ? TRUE : FALSE;
+    }
+
+    public function setNome($nome){
+        $this->nome = $nome;
+    }
+    public function setEmail($email){
+        $this->email = $email;
+    }
+    public function setSenha($senha){
+        $this->senha = $senha;
+    }
+    public function setTipo($tipo){
+        $this->tipo = $tipo;
+    }
+    public function setStatus($status){
+        $this->status = $status;
     }
 }

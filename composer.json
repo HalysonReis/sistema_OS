@@ -9,7 +9,8 @@
         },
         "classmap": [
             "app/Models",
-            "app/Controller"
+            "app/Controller",
+            "app/Controller/Usuario"
         ]
     },
     "authors": [
