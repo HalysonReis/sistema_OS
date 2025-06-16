@@ -5,12 +5,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "app\\": "src/"
+            "app\\": "app/"
         },
         "classmap": [
             "app/Models",
             "app/Controller",
-            "app/Controller/Usuario"
+            "app/Controller/Usuario.php",
+            "app/Controller/Cliente.php"
         ]
     },
     "authors": [

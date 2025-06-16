@@ -17,12 +17,20 @@ class Usuario{
     public function cadastro_usuario(){
         $db = new Database('usuario');
 
-        $value = [
-            'nome' => $this->nome,
-            'email' => $this->email,
-            'senha' => $this->senha,
-            'tipo' => $this->tipo,
-        ];
+        if ($this->tipo == 4){
+            $value = [
+                'nome' => $this->nome,
+                'email' => $this->email,
+                'tipo' => $this->tipo,
+            ];
+        }else {
+            $value = [
+                'nome' => $this->nome,
+                'email' => $this->email,
+                'senha' => $this->senha,
+                'tipo' => $this->tipo,
+            ];
+        }
 
         $insert = $db->insert_last_id($value);
         return $insert ? $insert : FALSE;
@@ -32,7 +40,7 @@ class Usuario{
         $db = new Database('usuario');
 
         if($id == null){
-            $select = $db->select()->fetchAll(PDO::FETCH_ASSOC);
+            $select = $db->select('tipo != 4')->fetchAll(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }else {
             $select = $db->select('id_usuario = '. $id)->fetch(PDO::FETCH_ASSOC);

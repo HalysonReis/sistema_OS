@@ -92,6 +92,17 @@ class Database {
         return $res ? TRUE : FALSE;
     }
 
+    public function update_pai($where, $values){
+        $fields = array_keys($values);
+        $param = array_values($values);
+
+        $query = "UPDATE usuario SET ". implode("=?,", $fields). "=? WHERE id_usuario = (SELECT id_usuario from ". $this->table. " WHERE ". $where. ")";
+
+        $res = $this->execute($query, $param);
+
+        return $res ? TRUE : FALSE;
+    }
+
     public function delete($where){
         $query = "UPDATE ". $this->table. " SET status = 0 WHERE ". $where;
         return $this->execute($query) ? TRUE : FALSE;
@@ -99,8 +110,8 @@ class Database {
 
     public function select_cliente($where = null, $limit = null, $order = null){
         $where = strlen($where) ? " WHERE ". $where : '';
-        $order = srtlen($order) ? " ORDER BY ". $order : '';
-        $limit = strlen($order) ? " LIMIT ". $limit : '';
+        $order = $order != null ? " ORDER BY ". $order : '';
+        $limit = $limit != null ? " LIMIT ". $limit : '';
 
         $query = "SELECT 
         cli.id_cliente, usu.id_usuario, usu.nome, usu.email, usu.status, usu.data_cadastro, cli.endereco, cli.telefone 
@@ -113,8 +124,8 @@ class Database {
 
     public function select_os($where = null, $limit = null, $order = null){
         $where = strlen($where) ? " WHERE ". $where : '';
-        $order = srtlen($order) ? " ORDER BY ". $order : '';
-        $limit = strlen($order) ? " LIMIT ". $limit : '';
+        $order = $order != null ? " ORDER BY ". $order : '';
+        $limit = $limit != null ? " LIMIT ". $limit : '';
 
         $query = "SELECT os.id_os, 
             os.descricao, 

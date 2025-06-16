@@ -1,14 +1,15 @@
 <?php
 
 namespace app\Controller;
-require '../../vendor/autoload.php';
+require '../vendor/autoload.php';
+use PDO;
 use app\Models\Database;
-use app\Controller\cliente;
+use app\Controller\Usuario;
 
-class cliente extends cliente{
-    public int $id_cliente;
-    public string $endereco;
-    public string $telefone;
+class Cliente extends Usuario{
+    public $id_cliente;
+    public $endereco;
+    public $telefone;
 
     public function cadastro_cliente(){
         $idUsuario = $this->cadastro_usuario();
@@ -18,13 +19,13 @@ class cliente extends cliente{
             $value = [
                 'endereco' => $this->endereco,
                 'telefone' => $this->telefone,
+                'id_usuario' => $idUsuario
             ];
             $insert_cliente = $db->insert($value);
-            return $insert_cliente ? TRUE : FALSE;
+            return $insert_cliente ? $idUsuario : FALSE;
         }else  {
             return FALSE;
         }
-
 
     }
 
@@ -32,25 +33,29 @@ class cliente extends cliente{
         $db = new Database('cliente');
 
         if($id == null){
-            $select = $db->select_cliente()->fetchAll(PDO::FECTH_ASSOC);
+            $select = $db->select_cliente()->fetchAll(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }else {
-            $select = $db->select_cliente('id_cliente = '. $id)->fetchObject(PDO::FECTH_ASSOC);
+            $select = $db->select_cliente('id_cliente = '. $id)->fetch(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }
     }
 
-    public function atualizar($id, $id_usuario){
-        if($this->atualizar_usuario($id_usuario)){
+    public function atualizar($id){
+        $db = new Database('cliente');
+        $value1 = [
+            'nome' => $this->nome,
+            'email' => $this->email,
+        ];
 
-            $db = new Database('cliente');
-    
-            $value = [
+        $update_pai = $db->update_pai('id_cliente = '. $id, $value1);
+        if($update_pai){
+            $value2 = [
                 'endereco' => $this->endereco,
                 'telefone' => $this->telefone,
             ];
     
-            $update = $db->update('id_cliente = '. $id, $value);
+            $update = $db->update('id_cliente = '. $id, $value2);
             return $update ? TRUE : FALSE;
         }else {
             return FALSE;
