@@ -131,7 +131,7 @@ class Database {
             os.descricao, 
             os.status, 
             os.data_abertura, 
-            os.data_previta,
+            os.data_prevista,
             os.data_entrega, 
             os.valor_total, 
             os.observacoes, 

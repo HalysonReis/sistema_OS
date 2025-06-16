@@ -1,23 +1,24 @@
 <?php
 
 namespace app\Controller;
-require '../../vendor/autoload.php';
+require '../vendor/autoload.php';
+use PDO;
 use app\Models\Database;
-use app\Controller\cliente;
 
 class OrdemServico {
-    public int $id_os;
-    public string $descricao;
-    public string $status = 'Aguardando';
-    public string $data_abertura;
-    public string $data_prevista;
-    public string $data_entrega;
-    public string $valor_total;
-    public string $observacoes;
+    public $id_os;
+    public $descricao;
+    public $status = 'Aguardando';
+    public $data_abertura;
+    public $data_prevista;
+    public $data_entrega;
+    public $valor_total;
+    public $observacoes;
+    public $id_cliente;
 
-    public function cadastro($id_cliente = null){
+    public function cadastro(){
 
-        if($id_cliente != null){
+        if(!empty($this->id_cliente)){
             $db = new Database('ordem_servico');
             $value = [
                 'descricao' => $this->descricao,
@@ -25,9 +26,10 @@ class OrdemServico {
                 'data_prevista' => $this->data_prevista,
                 'valor_total' => $this->valor_total,
                 'observacoes' => $this->observacoes,
+                'id_cliente' => $this->id_cliente,
             ];
             $insert = $db->insert($value);
-            return $insert ? TRUE : FALSE;
+            return $insert ? $insert : FALSE;
         }else  {
             return FALSE;
         }
@@ -39,10 +41,10 @@ class OrdemServico {
         $db = new Database('ordem_servico');
 
         if($id == null){
-            $select = $db->select_os()->fetchAll(PDO::FECTH_ASSOC);
+            $select = $db->select_os()->fetchAll(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }else {
-            $select = $db->select_cliente('id_os = '. $id)->fetchObject(PDO::FECTH_ASSOC);
+            $select = $db->select_os('id_os = '. $id)->fetch(PDO::FETCH_ASSOC);
             return $select ? $select : FALSE;
         }
     }
@@ -52,7 +54,6 @@ class OrdemServico {
 
         $value = [
             'descricao' => $this->descricao,
-            'status' => $this->status,
             'data_prevista' => $this->data_prevista,
             'valor_total' => $this->valor_total,
             'observacoes' => $this->observacoes,
