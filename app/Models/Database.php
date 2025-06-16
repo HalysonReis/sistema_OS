@@ -158,4 +158,21 @@ class Database {
             return $this->execute($query) ? TRUE : FALSE;
         }
     }
+
+    public function filtro_usuario($filtro){
+        $query = "SELECT 
+        id_usuario, 
+        nome, 
+        email, 
+        senha, 
+        tipo, 
+        status, 
+        data_cadastro 
+        FROM usuario
+        WHERE nome LIKE '%$filtro%' AND tipo != 4
+        OR email LIKE '%$filtro%'
+        AND tipo != 4";
+
+        return $this->execute($query);
+    }
 }

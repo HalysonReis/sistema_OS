@@ -65,5 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET"){
             $response = ['status' => 500, 'msg' => 'Erro no servidor '. $th];
             echo json_encode($response);
         }
+    }else if (isset($_GET['filtro'])){
+        try {
+
+            $response = ['usuario' => $usuario->filtrar_usuario($_GET['filtro']), "status" => 200];
+            echo json_encode($response);
+            
+        } catch (\Throwable $th) {
+            $response = ['status' => 500, 'msg' => 'Erro no servidor '. $th];
+            echo json_encode($response);
+        }
     }
 }

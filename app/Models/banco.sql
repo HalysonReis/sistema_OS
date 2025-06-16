@@ -65,3 +65,15 @@ inner join cliente cli
 on os.id_cliente = cli.id_cliente 
 inner join usuario usu 
 on cli.id_usuario = usu.id_usuario;
+
+select 
+id_usuario, 
+nome, 
+email, 
+senha, 
+tipo, 
+status, 
+data_cadastro 
+from usuario
+WHERE nome LIKE '%filtro%'
+OR email LIKE '%filtro%';

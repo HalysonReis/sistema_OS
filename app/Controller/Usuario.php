@@ -69,19 +69,11 @@ class Usuario{
         return $delete ? TRUE : FALSE;
     }
 
-    public function setNome($nome){
-        $this->nome = $nome;
-    }
-    public function setEmail($email){
-        $this->email = $email;
-    }
-    public function setSenha($senha){
-        $this->senha = $senha;
-    }
-    public function setTipo($tipo){
-        $this->tipo = $tipo;
-    }
-    public function setStatus($status){
-        $this->status = $status;
+    public function filtrar_usuario($filtro){
+        $db = new Database('usuario');
+
+        $filtro = $db->filtro_usuario($filtro)->fetchAll(PDO::FETCH_ASSOC);
+
+        return $filtro ? $filtro : FALSE;
     }
 }
