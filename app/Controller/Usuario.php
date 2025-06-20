@@ -11,7 +11,7 @@ class Usuario{
     public $email;
     public $senha;
     public $tipo;
-    public $status;
+    public $status_usu;
     public $data_cadastro;
 
     public function cadastro_usuario(){

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                 $response = ['status' => 201, 'msg' => 'Ordem de Serviço cadastrado.', $cadastro];
                 echo json_encode($response);
             }else {
-                $response = ['status' => 400, 'msg' => 'Dados mal informado, Ordem de Serviço  não cadastrado'];
+                $response = ['status' => 400, 'msg' => 'Dados mal informado, Ordem de Serviço não cadastrada'];
                 echo json_encode($response);
             }
         } catch (\Throwable $th) {
@@ -40,14 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                 $response = ['status' => 201, 'msg' => 'Ordem de Serviço  atualizar.'];
                 echo json_encode($response);
             }else {
-                $response = ['status' => 400, 'msg' => 'Dados mal informado, Ordem de Serviço  não atualizado'];
+                $response = ['status' => 400, 'msg' => 'Dados mal informado, Ordem de Serviço não atualizada'];
                 echo json_encode($response);
             }
         } catch (\Throwable $th) {
             $response = ['status' => 500, 'msg' => 'Erro no servidor'];
             echo json_encode($response);
         }
-    }else{
+    }
+    else if (isset($_POST['status'])){
+        try {
+            $id = $_POST['id_os'];
+            $status = $_POST['status'];
+
+            $mudar_status = $os->mudar_status($id, $status);
+
+            if ($mudar_status){
+                $response = ['status' => 201, 'msg' => 'status da Ordem de Serviço atualizada.'];
+                echo json_encode($response);
+            }
+        } catch (\Throwable $th) {
+            $response = ['status' => 500, 'msg' => 'Erro no servidor'. $th];
+            echo json_encode($response);
+        }
+    }
+    else{
         $response = ['status' => 400, 'msg' => 'Solicitação mal informada.'];
         echo json_encode($response);
     }
@@ -63,6 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $response = ['oss' => $os->listar(), "status" => 200];
                 echo json_encode($response);
             }
+        } catch (\Throwable $th) {
+            $response = ['status' => 500, 'msg' => 'Erro no servidor '. $th];
+            echo json_encode($response);
+        }
+    }
+    else if (isset($_GET['filtro'])){
+        try {
+            $response = ['os' => $os->filtro_os($_GET['filtro']), "status" => 200];
+            echo json_encode($response);
         } catch (\Throwable $th) {
             $response = ['status' => 500, 'msg' => 'Erro no servidor '. $th];
             echo json_encode($response);

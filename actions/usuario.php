@@ -45,7 +45,26 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
             $response = ['status' => 500, 'msg' => 'Erro no servidor'];
             echo json_encode($response);
         }
-    }else{
+    }
+    else if (isset($_POST['deletar'])){
+        try {
+            $id = $_POST['deletar'];
+
+            $deletar = $usuario->excluir($id);
+
+            if ($deletar){
+                $response = ['status' => 201, 'msg' => 'Usuário deletado.'];
+                echo json_encode($response);
+            }else {
+                $response = ['status' => 400, 'msg' => 'Usuário nao deletado.'];
+                echo json_encode($response);
+            }
+        } catch (\Throwable $th) {
+            $response = ['status' => 500, 'msg' => 'Erro no servidor'. $th];
+            echo json_encode($response);
+        }
+    }
+    else{
         $response = ['status' => 400, 'msg' => 'Solicitação mal informada.'];
         echo json_encode($response);
     }

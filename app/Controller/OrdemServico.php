@@ -8,7 +8,7 @@ use app\Models\Database;
 class OrdemServico {
     public $id_os;
     public $descricao;
-    public $status = 'Aguardando';
+    public $status_os = 'Aguardando';
     public $data_abertura;
     public $data_prevista;
     public $data_entrega;
@@ -22,7 +22,7 @@ class OrdemServico {
             $db = new Database('ordem_servico');
             $value = [
                 'descricao' => $this->descricao,
-                'status' => $this->status,
+                'status_os' => $this->status_os,
                 'data_prevista' => $this->data_prevista,
                 'valor_total' => $this->valor_total,
                 'observacoes' => $this->observacoes,
@@ -64,10 +64,18 @@ class OrdemServico {
 
     }
 
-    public function mudar_status($status){
+    public function mudar_status($id, $status){
         $db = new Database('ordem_servico');
 
-        $status = $db->update_status($status);
+        $status = $db->update_status('id_os = '. $id,$status);
         return $status ? TRUE : FALSE;
+    }
+
+    public function filtro_os($filtro){
+        $db = new Database('ordem_servico');
+
+        $buscar = $db->filtro_os($filtro)->fetch(PDO::FETCH_ASSOC);
+
+        return $buscar;
     }
 }

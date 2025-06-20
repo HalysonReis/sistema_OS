@@ -48,7 +48,26 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
             $response = ['status' => 500, 'msg' => 'Erro no servidor'];
             echo json_encode($response);
         }
-    }else{
+    }
+    else if (isset($_POST['deletar'])){
+        try {
+            $id = $_POST['deletar'];
+
+            $deletar = $cliente->deletar_cliente($id);
+
+            if ($deletar){
+                $response = ['status' => 201, 'msg' => 'Cliente deletado.'];
+                echo json_encode($response);
+            }else {
+                $response = ['status' => 400, 'msg' => 'Cliente nao deletado.', $deletar];
+                echo json_encode($response);
+            }
+        } catch (\Throwable $th) {
+            $response = ['status' => 500, 'msg' => 'Erro no servidor'. $th];
+            echo json_encode($response);
+        }
+    }
+    else{
         $response = ['status' => 400, 'msg' => 'Solicitação mal informada.'];
         echo json_encode($response);
     }
@@ -64,6 +83,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $response = ['clientes' => $cliente->listar(), "status" => 200];
                 echo json_encode($response);
             }
+        } catch (\Throwable $th) {
+            $response = ['status' => 500, 'msg' => 'Erro no servidor '. $th];
+            echo json_encode($response);
+        }
+    }
+    else if (isset($_GET['filtro'])){
+        try {
+            $busca = $cliente->filtrar_cliente($_GET['filtro']);
+            $response = ['busca' => $busca, 'status' => 200];
+            echo json_encode($response);
         } catch (\Throwable $th) {
             $response = ['status' => 500, 'msg' => 'Erro no servidor '. $th];
             echo json_encode($response);

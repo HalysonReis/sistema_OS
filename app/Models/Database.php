@@ -5,6 +5,7 @@ namespace app\Models;
 require '../vendor/autoload.php';
 use app\Models\Env;
 use PDO;
+use DateTime;
 $env = new Env();
 $env->load();
 
@@ -71,12 +72,12 @@ class Database {
         return $res ? $this->conn->lastInsertId() : FALSE;
     }
 
-    public function select($where = null, $limit = null, $order = null){
+    public function select($where = null, $limit = null, $order = null, $fields = '*'){
         $where = strlen($where) ? " WHERE ". $where : '';
         $order = $order != null ? " ORDER BY ". $order : '';
         $limit = $limit != null ? " LIMIT ". $limit : '';
 
-        $query = "SELECT * from ". $this->table. ' '. $where. ' '. $order. ' '. $limit;
+        $query = "SELECT ". $fields." from ". $this->table. ' '. $where. ' '. $order. ' '. $limit;
         
         return $this->execute($query);
     }
@@ -104,7 +105,7 @@ class Database {
     }
 
     public function delete($where){
-        $query = "UPDATE ". $this->table. " SET status = 0 WHERE ". $where;
+        $query = "UPDATE ". $this->table. " SET status_usu = 0 WHERE ". $where;
         return $this->execute($query) ? TRUE : FALSE;
     }
 
@@ -114,7 +115,7 @@ class Database {
         $limit = $limit != null ? " LIMIT ". $limit : '';
 
         $query = "SELECT 
-        cli.id_cliente, usu.id_usuario, usu.nome, usu.email, usu.status, usu.data_cadastro, cli.endereco, cli.telefone 
+        cli.id_cliente, usu.id_usuario, usu.nome, usu.email, usu.status_usu, usu.data_cadastro, cli.endereco, cli.telefone 
         from usuario usu 
         inner join cliente cli 
         on usu.id_usuario = cli.id_usuario ". $where. ' '. $order. ' '. $limit;
@@ -123,13 +124,13 @@ class Database {
     }
 
     public function select_os($where = null, $limit = null, $order = null){
-        $where = strlen($where) ? " WHERE ". $where : '';
+        $where = $where != null ? " WHERE ". $where : '';
         $order = $order != null ? " ORDER BY ". $order : '';
         $limit = $limit != null ? " LIMIT ". $limit : '';
 
         $query = "SELECT os.id_os, 
             os.descricao, 
-            os.status, 
+            os.status_os, 
             os.data_abertura, 
             os.data_prevista,
             os.data_entrega, 
@@ -147,15 +148,19 @@ class Database {
     }
 
     public function update_status($where, $new_status){
-        if($new_status == "entregue"){
-            $query = "UPDATE ". $this->table. " SET data_entrega = ". date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000)). " status = ". $new_status. " WHERE ". $where;
+        $date = new DateTime();
+        if($new_status == "finalizado"){
+            $query = "UPDATE ". $this->table. " SET data_entrega = '". $date->format('Y/m/d H:i:s'). "', status_os = '". $new_status. "' WHERE ". $where;
             return $this->execute($query) ? TRUE : FALSE;
         }else if ($new_status == "cancelado"){
-            $query = "UPDATE ". $this->table. " SET status = ". $new_status. " WHERE ". $where;
+            $query = "UPDATE ". $this->table. " SET status_os = '". $new_status. "' WHERE ". $where;
             return $this->execute($query) ? TRUE : FALSE;
-        }else {
-            $query = "UPDATE ". $this->table. " SET status = ". $new_status. " WHERE ". $where;
+        }else if ($new_status == "em andamento") {
+            $query = "UPDATE ". $this->table. " SET status_os = '". $new_status. "' WHERE ". $where;
             return $this->execute($query) ? TRUE : FALSE;
+        }
+        else {
+            return FALSE;
         }
     }
 
@@ -166,12 +171,47 @@ class Database {
         email, 
         senha, 
         tipo, 
-        status, 
+        status_usu, 
         data_cadastro 
         FROM usuario
         WHERE nome LIKE '%$filtro%' AND tipo != 4
         OR email LIKE '%$filtro%'
         AND tipo != 4";
+
+        return $this->execute($query);
+    }
+
+    public function filtro_cliente($filtro){
+        $query = "SELECT
+            cli.id_cliente, usu.nome, usu.email, usu.status_usu, usu.data_cadastro, cli.endereco, cli.telefone
+            FROM usuario usu
+            INNER JOIN cliente cli
+            ON usu.id_usuario = cli.id_usuario
+            WHERE usu.nome LIKE '%$filtro%'
+            OR usu.email LIKE '%$filtro%'
+            OR cli.endereco LIKE '%$filtro%'";
+
+        return $this->execute($query);
+    }
+
+    public function filtro_os($filtro){
+        $query = "SELECT os.id_os, 
+            os.descricao, 
+            os.status_os, 
+            os.data_abertura, 
+            os.data_prevista,
+            os.data_entrega, 
+            os.valor_total, 
+            os.observacoes, 
+            cli.telefone,
+            usu.nome
+            FROM ordem_servico os 
+            INNER JOIN cliente cli
+            ON os.id_cliente = cli.id_cliente 
+            INNER JOIN usuario usu 
+            ON cli.id_usuario = usu.id_usuario
+            WHERE usu.nome LIKE '%$filtro%'
+            OR os.id_os LIKE '%$filtro%'";
 
         return $this->execute($query);
     }

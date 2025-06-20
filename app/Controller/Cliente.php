@@ -62,4 +62,28 @@ class Cliente extends Usuario{
         }
 
     }
+
+    public function filtrar_cliente($filtro){
+        $db = new Database('cliente');
+
+        try {
+            $busca = $db->filtro_cliente($filtro)->fetch(PDO::FETCH_ASSOC);
+
+            return $busca;
+        } catch (\Throwable $th) {
+            return FALSE;
+        }
+    }
+
+    public function deletar_cliente($id){
+        $db = new Database('usuario');
+        try {
+            $cliente = $this->listar($id);
+            
+            $deletar = $db->delete('id_usuario = '. $cliente['id_usuario']);
+            return $deletar;
+        } catch (\Throwable $th) {
+            return FALSE;
+        }
+    }
 }
